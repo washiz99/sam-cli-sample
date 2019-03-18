@@ -1,12 +1,12 @@
 # ring-command
 
-This is a sample template for ring-command - Below is a brief explanation of what we have generated for you:
+SORACOMボタン リングコマンドアプリ
 
 ```bash
 .
 ├── README.md                   <-- This instructions file
 ├── event.json                  <-- API Gateway Proxy Integration event payload
-├── hello_world                 <-- Source code for a lambda function
+├── app                         <-- Source code for a lambda function
 │   ├── __init__.py
 │   ├── app.py                  <-- Lambda function code
 │   ├── requirements.txt        <-- Lambda function code
@@ -19,9 +19,11 @@ This is a sample template for ring-command - Below is a brief explanation of wha
 
 ## Requirements
 
-* AWS CLI already configured with Administrator permission
-* [Python 3 installed](https://www.python.org/downloads/)
-* [Docker installed](https://www.docker.com/community-edition)
+- Python 3 installed
+- AWS CLI installed
+- AWS SAM CLI installed
+- Docker installed
+    - with docker-compose
 
 ## Setup process
 
@@ -52,6 +54,21 @@ Events:
             Path: /hello
             Method: get
 ```
+
+## S3
+
+### show bucket list
+aws s3 ls --profile local --endpoint-url http://localhost:4572
+
+
+### create bucket
+aws s3 mb s3://soracom-labo-ring-command --profile local --endpoint-url http://localhost:4572
+
+
+### copy local file to s3
+aws s3 cp ./ring-command.json s3://soracom-labo-ring-command --profile local --endpoint-url http://localhost:4572
+
+
 
 ## Packaging and deployment
 
