@@ -1,4 +1,3 @@
-
 class RingCommand:
 
     def __init__(self, config):
@@ -24,7 +23,7 @@ class RingCommand:
 
     def to_json(self):
         config_json = {
-                'status': self.status,
+                'status': str(self.status),
                 'commands': self.commands
-                }
+        }
         return config_json

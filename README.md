@@ -62,12 +62,14 @@ aws s3 ls --profile local --endpoint-url http://localhost:4572
 
 
 ### create bucket
-aws s3 mb s3://soracom-labo-ring-command --profile local --endpoint-url http://localhost:4572
+aws s3 mb s3://soracom-labo-ringcommand --profile local --endpoint-url http://localhost:4572
 
 
 ### copy local file to s3
-aws s3 cp ./ring-command.json s3://soracom-labo-ring-command --profile local --endpoint-url http://localhost:4572
+aws s3 cp ./app/ring-command.json s3://soracom-labo-ringcommand --profile local --endpoint-url http://localhost:4572
 
+
+### run sam local
 
 
 ## Packaging and deployment

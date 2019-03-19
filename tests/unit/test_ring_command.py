@@ -32,3 +32,10 @@ def test_get_command(config_json):
 
     cmd = ring.get_command()
     assert cmd == 'first-lambda'
+
+
+def test_to_json(config_json):
+    ring = RingCommand(config_json)
+
+    json = ring.to_json()
+    assert config_json == json
