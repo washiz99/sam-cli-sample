@@ -1,18 +1,22 @@
+import boto3
 import json
 import os
-import boto3
+import requests
 
 from ring_command import RingCommand
 
 
 S3_BUCKET = 'soracom-labo-ringcommand'
 RING_COMMAND_CONFIG = 'ring-command.json'
+SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
 
 
 if os.getenv("AWS_SAM_LOCAL"):
+    slack_webhook_url = None
     s3_client = boto3.resource('s3', endpoint_url='http://host.docker.internal:4572/')
     # lambda_client = boto3.resource('lambda', endpoint_url='http://host.docker.internal:4574/')
 else:
+    slack_webhook_url = SLACK_WEBHOOK_URL
     s3_client = boto3.client('s3')
     # lambda_client = boto3.client('lambda')
 
@@ -31,14 +35,12 @@ def lambda_handler(event, context):
         ring = RingCommand(config_json)
         if click_type == 'SINGLE':
             res = ring.turn_next()
-            print('  status: ' + str(res))
-            print('  lambda: ' + ring.get_command())
+            post_slack('[SINGLE] {} : {}'.format(str(res), ring.get_command()))
         elif click_type == 'DOUBLE':
             res = ring.turn_prev()
-            print('  status: ' + str(res))
-            print('  lambda: ' + ring.get_command())
+            post_slack('[DOUBLE] {} : {}'.format(str(res), ring.get_command()))
         elif click_type == 'LONG':
-            print("  Invoke lambda!!")
+            post_slack('[LONG] {}'.format(ring.get_command()))
             """
             lambda_client.invoke(
                 FunctionName=ring.get_command(),
@@ -79,3 +81,15 @@ def upload_config(s3_client, config_json):
         json.dump(config_json, f)
     s3_client.Bucket(S3_BUCKET).upload_file('/tmp/' + RING_COMMAND_CONFIG, RING_COMMAND_CONFIG)
     return 0
+
+
+def post_slack(msg):
+    res = 0
+    if slack_webhook_url is not None:
+        payload_dic = {
+            'text': msg
+        }
+        res = requests.post(SLACK_WEBHOOK_URL, data=json.dumps(payload_dic))
+    else:
+        print(msg)
+    return res
