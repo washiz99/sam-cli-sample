@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'SOCRACOM button `Ring Command` system.
+
+  '
+Globals:
+  Function:
+    Timeout: 10
+Outputs:
+  HelloWorldFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunction
+      - Arn
+  HelloWorldFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value:
+      Fn::GetAtt:
+      - HelloWorldFunctionRole
+      - Arn
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+  HelloWorldFunction:
+    Properties:
+      CodeUri: s3://soracom-labo-ringcommand2/6f07053a416896f411a4053e71cfd3a7
+      Environment:
+        Variables:
+          BUCKET_NAME:
+            Ref: Bucket
+      Handler: app.lambda_handler
+      Policies:
+      - S3CrudPolicy:
+          BucketName:
+            Ref: Bucket
+      Runtime: python3.6
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

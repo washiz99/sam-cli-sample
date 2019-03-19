@@ -6,10 +6,13 @@ import requests
 from ring_command import RingCommand
 
 
-S3_BUCKET = 'soracom-labo-ringcommand'
+S3_BUCKET = os.environ['BUCKET_NAME']
 RING_COMMAND_CONFIG = 'ring-command.json'
-SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
+#SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'
+SLACK_WEBHOOK_URL = None
 
+print('S3:' + S3_BUCKET)
+print('SAM:' + str(os.getenv("AWS_SAM_LOCAL")))
 
 if os.getenv("AWS_SAM_LOCAL"):
     slack_webhook_url = None
@@ -17,8 +20,8 @@ if os.getenv("AWS_SAM_LOCAL"):
     # lambda_client = boto3.resource('lambda', endpoint_url='http://host.docker.internal:4574/')
 else:
     slack_webhook_url = SLACK_WEBHOOK_URL
-    s3_client = boto3.client('s3')
-    # lambda_client = boto3.client('lambda')
+    s3_client = boto3.resource('s3')
+    # lambda_client = boto3.resource('lambda')
 
 
 def lambda_handler(event, context):
